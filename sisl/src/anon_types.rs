@@ -1,4 +1,4 @@
-pub fn dumps(name: &str) -> &str
+pub fn dumps(input: &str) -> String
 {
-    return name;
+    return ["'{{\"_\": !_str \"", "\"}}'"].join(input);
 }
