@@ -1,6 +1,6 @@
-pub fn dumps<T: Type>(input: T) -> String
+pub fn dumps<T: Type>(input: T) -> String where T: std::fmt::Display
 {
-    input.get_type()
+    String::from("{\"_\": !_") + &input.get_type() + " \"" + &input.to_string() + "\"}"
 }
 
 pub trait Type
