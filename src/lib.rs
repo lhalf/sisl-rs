@@ -1,1 +1,2 @@
-pub mod anon_types;
+mod anon_types;
+pub use anon_types::dumps;
