@@ -33,3 +33,11 @@ impl Type for float
         String::from("float")
     }
 }
+
+impl Type for bool
+{
+    fn get_type(&self) -> String
+    {
+        String::from("bool")
+    }
+}

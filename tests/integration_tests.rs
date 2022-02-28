@@ -65,3 +65,9 @@ fn anon_f64()
 {
     assert_eq!("{\"_\": !_float \"1000.1\"}", sisl::dumps(1000.1 as f64));
 }
+
+#[test]
+fn anon_bool()
+{
+    assert_eq!("{\"_\": !_bool \"true\"}", sisl::dumps(true));
+}
