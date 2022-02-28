@@ -53,3 +53,15 @@ fn anon_u64()
 {
     assert_eq!("{\"_\": !_int \"4294967296\"}", sisl::dumps(4294967296 as u64));
 }
+
+#[test]
+fn anon_f32()
+{
+    assert_eq!("{\"_\": !_float \"10.1\"}", sisl::dumps(10.1 as f32));
+}
+
+#[test]
+fn anon_f64()
+{
+    assert_eq!("{\"_\": !_float \"1000.1\"}", sisl::dumps(1000.1 as f64));
+}

@@ -24,3 +24,12 @@ impl Type for integer
         String::from("int")
     }
 }
+
+#[duplicate::duplicate_item(float; [f32]; [f64])]
+impl Type for float
+{
+    fn get_type(&self) -> String
+    {
+        String::from("float")
+    }
+}
