@@ -71,3 +71,9 @@ fn anon_bool()
 {
     assert_eq!("{\"_\": !_bool \"true\"}", sisl::dumps(true));
 }
+
+#[test]
+fn anon_none()
+{
+    assert_eq!("{\"_\": !_null \"\"}", sisl::dumps(None::<()>));
+}

@@ -1,11 +1,12 @@
-pub fn dumps<T: Type>(input: T) -> String where T: std::fmt::Display
+pub fn dumps<T: Type>(input: T) -> String
 {
-    String::from("{\"_\": !_") + &input.get_type() + " \"" + &input.to_string() + "\"}"
+    String::from("{\"_\": !_") + &input.get_type() + " \"" + &input.get_value() + "\"}"
 }
 
 pub trait Type
 {
     fn get_type(&self) -> String;
+    fn get_value(&self) -> String;
 }
 
 impl Type for &str
@@ -13,6 +14,10 @@ impl Type for &str
     fn get_type(&self) -> String
     {
         String::from("str")
+    }
+    fn get_value(&self) -> String
+    {
+        self.to_string()
     }
 }
 
@@ -23,6 +28,10 @@ impl Type for integer
     {
         String::from("int")
     }
+    fn get_value(&self) -> String
+    {
+        self.to_string()
+    }
 }
 
 #[duplicate::duplicate_item(float; [f32]; [f64])]
@@ -32,6 +41,10 @@ impl Type for float
     {
         String::from("float")
     }
+    fn get_value(&self) -> String
+    {
+        self.to_string()
+    }
 }
 
 impl Type for bool
@@ -39,5 +52,21 @@ impl Type for bool
     fn get_type(&self) -> String
     {
         String::from("bool")
+    }
+    fn get_value(&self) -> String
+    {
+        self.to_string()
+    }
+}
+
+impl Type for Option<()>
+{
+    fn get_type(&self) -> String
+    {
+        String::from("null")
+    }
+    fn get_value(&self) -> String
+    {
+        String::from("")
     }
 }
