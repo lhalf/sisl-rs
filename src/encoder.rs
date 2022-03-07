@@ -1,7 +1,27 @@
-pub fn dumps<T>(input: T) -> String where T: std::fmt::Display
+pub fn dumps<T>(input: T) -> String where T: std::fmt::Display + SISL
 {
-    String::from("{\"_\": !_") + std::any::type_name::<T>() + " \"" + &input.to_string() + "\"}"
+     input.get_name() + &input.get_type() + " \"" + &input.get_value() + "\"}"
 }
+
+pub trait SISL
+{
+    fn get_name(&self) -> String
+    {
+        String::from("{\"_\": !_")
+    }
+
+    fn get_type(&self) -> String
+    {
+        String::from(std::any::type_name::<Self>())
+    }
+    fn get_value(&self) -> String where Self: std::fmt::Display
+    {
+        self.to_string()
+    }
+}
+
+#[duplicate::duplicate_item(anon_types; [i8]; [i16]; [i32]; [i64]; [i128]; [u8]; [u16]; [u32]; [u64]; [u128]; [&str]; [f32]; [f64]; [bool])]
+impl SISL for anon_types {}
 
 #[cfg(test)]
 mod tests
