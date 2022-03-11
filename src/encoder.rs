@@ -1,9 +1,22 @@
-pub fn dumps<T>(input: T) -> String where T: std::fmt::Display + SISL
+struct Wrapper<T> where T: std::fmt::Debug
 {
-     input.get_name() + &input.get_type() + " \"" + &input.get_value() + "\"}"
+    value: T,
+}
+
+pub fn dumps<T>(input: T) -> String where T: std::fmt::Debug
+{
+    let wrapper = Wrapper { value: input };
+     wrapper.get_name() + &wrapper.get_type() + " \"" + &wrapper.get_value() + "\"}"
 }
 
 pub trait SISL
+{
+    fn get_name(&self) -> String;
+    fn get_type(&self) -> String;
+    fn get_value(&self) -> String;
+}
+
+impl<T> SISL for Wrapper<T> where T: std::fmt::Debug
 {
     fn get_name(&self) -> String
     {
@@ -12,16 +25,21 @@ pub trait SISL
 
     fn get_type(&self) -> String
     {
-        String::from(std::any::type_name::<Self>())
+        String::from(std::any::type_name::<T>())
     }
-    fn get_value(&self) -> String where Self: std::fmt::Display
+    fn get_value(&self) -> String
     {
         self.to_string()
     }
 }
 
-#[duplicate::duplicate_item(anon_types; [i8]; [i16]; [i32]; [i64]; [i128]; [u8]; [u16]; [u32]; [u64]; [u128]; [&str]; [f32]; [f64]; [bool])]
-impl SISL for anon_types {}
+impl<T> std::fmt::Display for Wrapper<T> where T: std::fmt::Debug
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result
+    {
+        write!(f, "{:?}", self.value)
+    }
+}
 
 #[cfg(test)]
 mod tests
@@ -31,7 +49,7 @@ mod tests
     #[test]
     fn anon_string()
     {
-    assert_eq!("{\"_\": !_&str \"test string\"}", dumps("test string"));
+    assert_eq!("{\"_\": !_&str \"\"test string\"\"}", dumps("test string"));
     }
 
     #[test]
