@@ -29,8 +29,16 @@ impl<T> SISL for Wrapper<T> where T: std::fmt::Debug
     }
     fn get_value(&self) -> String
     {
-        self.to_string()
+        remove_quotes(self.to_string())
     }
+}
+
+fn remove_quotes(mut input: String) -> String
+{
+    input = input.replacen("\"", "", 1);
+    input = input.chars().rev().collect();
+    input = input.replacen("\"", "", 1);
+    input.chars().rev().collect()
 }
 
 impl<T> std::fmt::Display for Wrapper<T> where T: std::fmt::Debug
@@ -49,7 +57,7 @@ mod tests
     #[test]
     fn anon_string()
     {
-    assert_eq!("{\"_\": !_&str \"\"test string\"\"}", dumps("test string"));
+    assert_eq!("{\"_\": !_&str \"test string\"}", dumps("test string"));
     }
 
     #[test]
