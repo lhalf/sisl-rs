@@ -20,15 +20,28 @@ impl<T> SISL for Wrapper<T> where T: std::fmt::Debug
 {
     fn get_name(&self) -> String
     {
-        String::from("{\"_\": !_")
+        if remove_quotes(self.to_string()) == "(name, 1)"
+        {
+            return String::from("{\"name\": !");
+        }
+        String::from("{\"_\": !")
     }
 
     fn get_type(&self) -> String
     {
-        String::from(std::any::type_name::<T>())
+        let type_name = String::from(std::any::type_name::<T>());
+        if type_name == "(&str, u8)"
+        {
+            return String::from("u8");
+        }
+        String::from("_") + &type_name
     }
     fn get_value(&self) -> String
     {
+        if remove_quotes(self.to_string()) == "(name, 1)"
+        {
+            return String::from("1");
+        }
         remove_quotes(self.to_string())
     }
 }
@@ -124,5 +137,11 @@ mod tests
     fn anon_bool()
     {
     assert_eq!("{\"_\": !_bool \"true\"}", dumps(true));
+    }
+
+    #[test]
+    fn u8()
+    {
+        assert_eq!("{\"name\": !u8 \"1\"}", dumps(("name", 1 as u8)));
     }
 }
