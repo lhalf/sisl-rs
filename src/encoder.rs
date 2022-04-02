@@ -18,6 +18,7 @@ pub trait SISL
 
 impl<T> SISL for Wrapper<T> where T: std::fmt::Debug
 {
+    
     fn get_name(&self) -> String
     {
         if remove_quotes(self.to_string()) == "(name, 1)"
