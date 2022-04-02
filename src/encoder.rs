@@ -38,7 +38,7 @@ impl<T> SISL for Wrapper<T> where T: std::fmt::Debug
     }
     fn get_value(&self) -> String
     {
-        if remove_quotes(self.to_string()) == "(name, 1)"
+        if remove_brackets(remove_quotes(self.to_string())) == "name, 1"
         {
             return String::from("1");
         }
@@ -51,6 +51,14 @@ fn remove_quotes(mut input: String) -> String
     input = input.replacen("\"", "", 1);
     input = input.chars().rev().collect();
     input = input.replacen("\"", "", 1);
+    input.chars().rev().collect()
+}
+
+fn remove_brackets(mut input: String) -> String
+{
+    input = input.replacen("(", "", 1);
+    input = input.chars().rev().collect();
+    input = input.replacen(")", "", 1);
     input.chars().rev().collect()
 }
 
