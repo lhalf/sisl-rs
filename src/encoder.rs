@@ -20,30 +20,16 @@ impl<T> SISL for Wrapper<T> where T: std::fmt::Debug
 {
     fn get_name(&self) -> String
     {
-        if remove_quotes(self.to_string()) == "(name, 1)"
-        {
-            return String::from("{\"name\": !");
-        }
         String::from("{\"_\": !")
     }
 
     fn get_type(&self) -> String
     {
         let type_name = String::from(std::any::type_name::<T>());
-        if type_name == "(&str, u8)"
-        {
-            return String::from("u8");
-        }
         String::from("_") + &type_name
     }
     fn get_value(&self) -> String
     {
-        let input = remove_brackets(remove_quotes(self.to_string()));
-        let input_vector: Vec<&str> = input.split(", ").collect();
-        if input_vector.get(1) == Some(&"1")
-        {
-            return String::from("1");
-        }
         remove_quotes(self.to_string())
     }
 }
@@ -53,14 +39,6 @@ fn remove_quotes(mut input: String) -> String
     input = input.replacen("\"", "", 1);
     input = input.chars().rev().collect();
     input = input.replacen("\"", "", 1);
-    input.chars().rev().collect()
-}
-
-fn remove_brackets(mut input: String) -> String
-{
-    input = input.replacen("(", "", 1);
-    input = input.chars().rev().collect();
-    input = input.replacen(")", "", 1);
     input.chars().rev().collect()
 }
 
@@ -147,11 +125,5 @@ mod tests
     fn anon_bool()
     {
     assert_eq!("{\"_\": !_bool \"true\"}", dumps(true));
-    }
-
-    #[test]
-    fn u8()
-    {
-        assert_eq!("{\"name\": !u8 \"1\"}", dumps(("name", 1 as u8)));
     }
 }
