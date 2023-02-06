@@ -21,8 +21,7 @@ impl SISL for types
 
     fn get_type(&self) -> String
     {
-        let type_name = String::from(std::any::type_name::<types>());
-        String::from("_") + &type_name
+        String::from("_") + &String::from(std::any::type_name::<types>())
     }
     fn get_value(&self) -> String
     {
