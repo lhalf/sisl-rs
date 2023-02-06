@@ -11,8 +11,8 @@ pub trait SISL
 }
 
 use duplicate::duplicate_item;
-#[duplicate_item(types; [i8]; [i16]; [i32]; [i64]; [u8]; [u16]; [u32]; [u64]; [f32]; [f64]; [&str]; [bool])]
-impl SISL for types
+#[duplicate_item(anon_types; [i8]; [i16]; [i32]; [i64]; [u8]; [u16]; [u32]; [u64]; [f32]; [f64]; [&str]; [bool])]
+impl SISL for anon_types
 {
     fn get_name(&self) -> String
     {
@@ -21,7 +21,7 @@ impl SISL for types
 
     fn get_type(&self) -> String
     {
-        String::from("_") + &String::from(std::any::type_name::<types>())
+        String::from("_") + &String::from(std::any::type_name::<anon_types>())
     }
     fn get_value(&self) -> String
     {
