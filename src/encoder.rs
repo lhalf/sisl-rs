@@ -28,7 +28,8 @@ impl SISL for basic_types
     }
 }
 
-impl SISL for (&str, &str)
+#[duplicate_item(basic_types; [i8]; [i16]; [i32]; [i64]; [&str])]
+impl SISL for (&str, basic_types)
 {
     fn get_name(&self) -> String
     {
@@ -36,7 +37,7 @@ impl SISL for (&str, &str)
     }
     fn get_type(&self) -> String
     {
-        String::from(std::any::type_name::<&str>())
+        String::from(std::any::type_name::<basic_types>())
     }
     fn get_value(&self) -> String
     {
@@ -50,7 +51,7 @@ mod tests
     use crate::dumps;
 
     #[test]
-    fn anon_string()
+    fn anon_str()
     {
     assert_eq!("{\"_\": !_&str \"test string\"}", dumps("test string"));
     }
@@ -122,8 +123,32 @@ mod tests
     }
 
     #[test]
-    fn string()
+    fn str()
     {
-        assert_eq!("{\"name\": !&str \"test string\"}", dumps(("name", "test string")))
+        assert_eq!("{\"str name\": !&str \"test string\"}", dumps(("str name", "test string")))
+    }
+
+    #[test]
+    fn i8()
+    {
+        assert_eq!("{\"i8 name\": !i8 \"-1\"}", dumps(("i8 name", -1 as i8)))
+    }
+
+    #[test]
+    fn i16()
+    {
+        assert_eq!("{\"i16 name\": !i16 \"-32768\"}", dumps(("i16 name", -32768 as i16)))
+    }
+
+    #[test]
+    fn i32()
+    {
+        assert_eq!("{\"i32 name\": !i32 \"-2147483648\"}", dumps(("i32 name", -2147483648 as i32)))
+    }
+
+    #[test]
+    fn i64()
+    {
+        assert_eq!("{\"i64 name\": !i64 \"-2147483649\"}", dumps(("i64 name", -2147483649 as i64)))
     }
 }
