@@ -1,12 +1,6 @@
-struct Wrapper<T> where T: std::fmt::Debug
+pub fn dumps<T>(input: T) -> String where T: SISL
 {
-    value: T,
-}
-
-pub fn dumps<T>(input: T) -> String where T: std::fmt::Debug
-{
-    let wrapper = Wrapper { value: input };
-     wrapper.get_name() + &wrapper.get_type() + " \"" + &wrapper.get_value() + "\"}"
+     input.get_name() + &input.get_type() + " \"" + &input.get_value() + "\"}"
 }
 
 pub trait SISL
@@ -16,7 +10,9 @@ pub trait SISL
     fn get_value(&self) -> String;
 }
 
-impl<T> SISL for Wrapper<T> where T: std::fmt::Debug
+use duplicate::duplicate_item;
+#[duplicate_item(types; [i8]; [i16]; [i32]; [i64]; [u8]; [u16]; [u32]; [u64]; [f32]; [f64]; [&str]; [bool])]
+impl SISL for types
 {
     fn get_name(&self) -> String
     {
@@ -25,7 +21,7 @@ impl<T> SISL for Wrapper<T> where T: std::fmt::Debug
 
     fn get_type(&self) -> String
     {
-        let type_name = String::from(std::any::type_name::<T>());
+        let type_name = String::from(std::any::type_name::<types>());
         String::from("_") + &type_name
     }
     fn get_value(&self) -> String
@@ -40,14 +36,6 @@ fn remove_quotes(mut input: String) -> String
     input = input.chars().rev().collect();
     input = input.replacen("\"", "", 1);
     input.chars().rev().collect()
-}
-
-impl<T> std::fmt::Display for Wrapper<T> where T: std::fmt::Debug
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result
-    {
-        write!(f, "{:?}", self.value)
-    }
 }
 
 #[cfg(test)]
