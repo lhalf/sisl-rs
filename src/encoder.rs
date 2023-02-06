@@ -25,16 +25,8 @@ impl SISL for anon_types
     }
     fn get_value(&self) -> String
     {
-        remove_quotes(self.to_string())
+        self.to_string().replace("\"", "")
     }
-}
-
-fn remove_quotes(mut input: String) -> String
-{
-    input = input.replacen("\"", "", 1);
-    input = input.chars().rev().collect();
-    input = input.replacen("\"", "", 1);
-    input.chars().rev().collect()
 }
 
 #[cfg(test)]
