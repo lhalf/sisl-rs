@@ -1,6 +1,6 @@
 pub fn dumps<T>(input: T) -> String where T: SISL
 {
-     input.get_name() + &input.get_type() + " \"" + &input.get_value() + "\"}"
+     String::from("{\"") + &input.get_name() + "\": !" + &input.get_type() + " \"" + &input.get_value() + "\"}"
 }
 
 pub trait SISL
@@ -11,21 +11,36 @@ pub trait SISL
 }
 
 use duplicate::duplicate_item;
-#[duplicate_item(anon_types; [i8]; [i16]; [i32]; [i64]; [u8]; [u16]; [u32]; [u64]; [f32]; [f64]; [&str]; [bool])]
-impl SISL for anon_types
+#[duplicate_item(basic_types; [i8]; [i16]; [i32]; [i64]; [u8]; [u16]; [u32]; [u64]; [f32]; [f64]; [&str]; [bool])]
+impl SISL for basic_types
 {
     fn get_name(&self) -> String
     {
-        String::from("{\"_\": !")
+        String::from("_")
     }
-
     fn get_type(&self) -> String
     {
-        String::from("_") + &String::from(std::any::type_name::<anon_types>())
+        String::from("_") + &String::from(std::any::type_name::<basic_types>())
     }
     fn get_value(&self) -> String
     {
         self.to_string().replace("\"", "")
+    }
+}
+
+impl SISL for (&str, &str)
+{
+    fn get_name(&self) -> String
+    {
+        String::from(self.0)
+    }
+    fn get_type(&self) -> String
+    {
+        String::from(std::any::type_name::<&str>())
+    }
+    fn get_value(&self) -> String
+    {
+        self.1.to_string().replace("\"", "")
     }
 }
 
@@ -104,5 +119,11 @@ mod tests
     fn anon_bool()
     {
     assert_eq!("{\"_\": !_bool \"true\"}", dumps(true));
+    }
+
+    #[test]
+    fn string()
+    {
+        assert_eq!("{\"name\": !&str \"test string\"}", dumps(("name", "test string")))
     }
 }
