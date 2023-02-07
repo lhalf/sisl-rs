@@ -1,14 +1,15 @@
 pub fn dumps<T: SISL>(input: T) -> String {
     format!(
-        "{{\"{}\": !{} \"{}\"}}",
-        input.get_name(),
+        "{{\"{}\": !{}{} \"{}\"}}",
+        input.get_name().unwrap_or("_".to_string()),
+        input.get_name().map(|_| "").unwrap_or("_"),
         input.get_type(),
         input.get_value()
     )
 }
 
 pub trait SISL {
-    fn get_name(&self) -> String;
+    fn get_name(&self) -> Option<String>;
     fn get_type(&self) -> String;
     fn get_value(&self) -> String;
 }
@@ -16,11 +17,11 @@ pub trait SISL {
 use duplicate::duplicate_item;
 #[duplicate_item(int_types; [i8]; [i16]; [i32]; [i64]; [u8]; [u16]; [u32]; [u64])]
 impl SISL for int_types {
-    fn get_name(&self) -> String {
-        String::from("_")
+    fn get_name(&self) -> Option<String> {
+        None
     }
     fn get_type(&self) -> String {
-        String::from("_int")
+        String::from("int")
     }
     fn get_value(&self) -> String {
         self.to_string()
@@ -29,11 +30,11 @@ impl SISL for int_types {
 
 #[duplicate_item(float_types; [f32]; [f64])]
 impl SISL for float_types {
-    fn get_name(&self) -> String {
-        String::from("_")
+    fn get_name(&self) -> Option<String> {
+        None
     }
     fn get_type(&self) -> String {
-        String::from("_float")
+        String::from("float")
     }
     fn get_value(&self) -> String {
         self.to_string()
@@ -41,11 +42,11 @@ impl SISL for float_types {
 }
 
 impl SISL for &str {
-    fn get_name(&self) -> String {
-        String::from("_")
+    fn get_name(&self) -> Option<String> {
+        None
     }
     fn get_type(&self) -> String {
-        String::from("_str")
+        String::from("str")
     }
     fn get_value(&self) -> String {
         self.to_string()
@@ -53,11 +54,11 @@ impl SISL for &str {
 }
 
 impl SISL for bool {
-    fn get_name(&self) -> String {
-        String::from("_")
+    fn get_name(&self) -> Option<String> {
+        None
     }
     fn get_type(&self) -> String {
-        String::from("_bool")
+        String::from("bool")
     }
     fn get_value(&self) -> String {
         self.to_string()
@@ -65,11 +66,11 @@ impl SISL for bool {
 }
 
 impl<T: SISL> SISL for (&str, T) {
-    fn get_name(&self) -> String {
-        String::from(self.0)
+    fn get_name(&self) -> Option<String> {
+        Some(self.0.to_string())
     }
     fn get_type(&self) -> String {
-        self.1.get_type().replace("_", "")
+        self.1.get_type()
     }
     fn get_value(&self) -> String {
         self.1.get_value()
