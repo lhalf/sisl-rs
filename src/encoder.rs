@@ -1,6 +1,6 @@
 pub fn dumps<T: SISL>(input: T) -> String {
     format!(
-        "{{\"{}\": !{}{} \"{}\"}}",
+        "{{\"{}\": !{}{} {}}}",
         input.get_name().unwrap_or("_".to_string()),
         input.get_name().map(|_| "").unwrap_or("_"),
         input.get_type(),
@@ -21,10 +21,10 @@ impl SISL for int_types {
         None
     }
     fn get_type(&self) -> String {
-        String::from("int")
+        "int".to_string()
     }
     fn get_value(&self) -> String {
-        self.to_string()
+        format!("\"{}\"", self)
     }
 }
 
@@ -37,7 +37,7 @@ impl SISL for float_types {
         String::from("float")
     }
     fn get_value(&self) -> String {
-        self.to_string()
+        format!("\"{}\"", self)
     }
 }
 
@@ -46,10 +46,10 @@ impl SISL for &str {
         None
     }
     fn get_type(&self) -> String {
-        String::from("str")
+        "str".to_string()
     }
     fn get_value(&self) -> String {
-        self.to_string()
+        format!("\"{}\"", self)
     }
 }
 
@@ -58,10 +58,10 @@ impl SISL for bool {
         None
     }
     fn get_type(&self) -> String {
-        String::from("bool")
+        "bool".to_string()
     }
     fn get_value(&self) -> String {
-        self.to_string()
+        format!("\"{}\"", self)
     }
 }
 
@@ -78,7 +78,27 @@ impl<T: SISL> SISL for Option<T> {
     fn get_value(&self) -> String {
         self.as_ref()
             .map(|inner| inner.get_value())
-            .unwrap_or_else(|| "".to_string())
+            .unwrap_or_else(|| "\"\"".to_string())
+    }
+}
+
+impl<T: SISL> SISL for &[T] {
+    fn get_name(&self) -> Option<String> {
+        None
+    }
+    fn get_type(&self) -> String {
+        "list".to_string()
+    }
+    fn get_value(&self) -> String {
+        // enumerate turns into (index, item)
+        let items: Vec<String> = self
+            .iter()
+            .enumerate()
+            .map(|(index, item)| {
+                format!("\"_{}\": !{} {}", index, item.get_type(), item.get_value())
+            })
+            .collect();
+        format!("{{{}}}", items.join(", "))
     }
 }
 
@@ -203,5 +223,13 @@ mod tests {
     #[test]
     fn some_bool() {
         assert_eq!("{\"_\": !_bool \"true\"}", dumps(Some(true)))
+    }
+
+    #[test]
+    fn anon_array() {
+        assert_eq!(
+            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps([1, 2].as_ref())
+        )
     }
 }
