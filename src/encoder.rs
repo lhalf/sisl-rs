@@ -102,6 +102,18 @@ impl<T: SISL> SISL for &[T] {
     }
 }
 
+impl<T: SISL> SISL for &T {
+    fn get_name(&self) -> Option<String> {
+        (*self).get_name()
+    }
+    fn get_type(&self) -> String {
+        (*self).get_type()
+    }
+    fn get_value(&self) -> String {
+        (*self).get_value()
+    }
+}
+
 impl<T: SISL> SISL for (&str, T) {
     fn get_name(&self) -> Option<String> {
         Some(self.0.to_string())
@@ -226,10 +238,18 @@ mod tests {
     }
 
     #[test]
-    fn anon_array() {
+    fn anon_array_ref() {
         assert_eq!(
             "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
             dumps([1, 2].as_ref())
+        )
+    }
+
+    #[test]
+    fn bool_ref() {
+        assert_eq!(
+            "{\"bool name\": !bool \"true\"}",
+            dumps(("bool name", &true))
         )
     }
 }
