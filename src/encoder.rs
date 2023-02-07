@@ -215,6 +215,38 @@ mod tests {
     }
 
     #[test]
+    fn anon_array_ref() {
+        assert_eq!(
+            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps([1, 2].as_ref())
+        )
+    }
+
+    #[test]
+    fn anon_vec_ref() {
+        assert_eq!(
+            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps(vec![1, 2].as_slice())
+        )
+    }
+
+    #[test]
+    fn anon_vec() {
+        assert_eq!(
+            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps(vec![1, 2])
+        )
+    }
+
+    #[test]
+    fn anon_array() {
+        assert_eq!(
+            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps([1, 2])
+        )
+    }
+
+    #[test]
     fn str() {
         assert_eq!(
             "{\"str name\": !str \"test string\"}",
@@ -252,44 +284,44 @@ mod tests {
     }
 
     #[test]
-    fn none_bool() {
+    fn anon_none_bool() {
         assert_eq!("{\"_\": !_null \"\"}", dumps(None::<bool>))
     }
 
     #[test]
-    fn some_bool() {
+    fn anon_some_bool() {
         assert_eq!("{\"_\": !_bool \"true\"}", dumps(Some(true)))
     }
 
     #[test]
-    fn anon_array_ref() {
+    fn array_ref() {
         assert_eq!(
-            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
-            dumps([1, 2].as_ref())
+            "{\"array name\": !list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps(("array name", [1, 2].as_ref()))
         )
     }
 
     #[test]
-    fn anon_vec_ref() {
+    fn vec_ref() {
         assert_eq!(
-            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
-            dumps(vec![1, 2].as_slice())
+            "{\"vec name\": !list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps(("vec name", vec![1, 2].as_slice()))
         )
     }
 
     #[test]
-    fn anon_vec() {
+    fn vec() {
         assert_eq!(
-            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
-            dumps(vec![1, 2])
+            "{\"vec name\": !list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps(("vec name", vec![1, 2]))
         )
     }
 
     #[test]
-    fn anon_array() {
+    fn array() {
         assert_eq!(
-            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
-            dumps([1, 2])
+            "{\"array name\": !list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps(("array name", [1, 2]))
         )
     }
 
