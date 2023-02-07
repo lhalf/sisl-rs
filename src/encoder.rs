@@ -247,6 +247,16 @@ mod tests {
     }
 
     #[test]
+    fn anon_none_bool() {
+        assert_eq!("{\"_\": !_null \"\"}", dumps(None::<bool>))
+    }
+
+    #[test]
+    fn anon_some_bool() {
+        assert_eq!("{\"_\": !_bool \"true\"}", dumps(Some(true)))
+    }
+
+    #[test]
     fn str() {
         assert_eq!(
             "{\"str name\": !str \"test string\"}",
@@ -281,16 +291,6 @@ mod tests {
             "{\"i64 name\": !int \"-2147483649\"}",
             dumps(("i64 name", -2147483649 as i64))
         )
-    }
-
-    #[test]
-    fn anon_none_bool() {
-        assert_eq!("{\"_\": !_null \"\"}", dumps(None::<bool>))
-    }
-
-    #[test]
-    fn anon_some_bool() {
-        assert_eq!("{\"_\": !_bool \"true\"}", dumps(Some(true)))
     }
 
     #[test]
