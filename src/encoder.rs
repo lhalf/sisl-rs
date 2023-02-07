@@ -246,6 +246,14 @@ mod tests {
     }
 
     #[test]
+    fn anon_vec_ref() {
+        assert_eq!(
+            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps(vec![1, 2].as_slice())
+        )
+    }
+
+    #[test]
     fn bool_ref() {
         assert_eq!(
             "{\"bool name\": !bool \"true\"}",
