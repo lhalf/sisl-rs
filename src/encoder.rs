@@ -196,7 +196,12 @@ mod tests {
     }
 
     #[test]
-    fn none() {
+    fn none_bool() {
         assert_eq!("{\"_\": !_null \"\"}", dumps(None::<bool>))
+    }
+
+    #[test]
+    fn some_bool() {
+        assert_eq!("{\"_\": !_bool \"true\"}", dumps(Some(true)))
     }
 }
