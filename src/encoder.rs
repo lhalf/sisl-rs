@@ -102,6 +102,18 @@ impl<T: SISL> SISL for &[T] {
     }
 }
 
+impl<T: SISL, const SIZE: usize> SISL for [T; SIZE] {
+    fn get_name(&self) -> Option<String> {
+        self.as_ref().get_name()
+    }
+    fn get_type(&self) -> String {
+        self.as_ref().get_type()
+    }
+    fn get_value(&self) -> String {
+        self.as_ref().get_value()
+    }
+}
+
 impl<T: SISL> SISL for &T {
     fn get_name(&self) -> Option<String> {
         (*self).get_name()
@@ -250,6 +262,14 @@ mod tests {
         assert_eq!(
             "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
             dumps(vec![1, 2].as_slice())
+        )
+    }
+
+    #[test]
+    fn anon_array() {
+        assert_eq!(
+            "{\"_\": !_list {\"_0\": !int \"1\", \"_1\": !int \"2\"}}",
+            dumps([1, 2])
         )
     }
 
