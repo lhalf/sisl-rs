@@ -65,6 +65,23 @@ impl SISL for bool {
     }
 }
 
+impl<T: SISL> SISL for Option<T> {
+    fn get_name(&self) -> Option<String> {
+        None
+    }
+    fn get_type(&self) -> String {
+        // use unwrap_or_else with closure, prevents "null" String being allocated if not needed
+        self.as_ref()
+            .map(|inner| inner.get_type())
+            .unwrap_or_else(|| "null".to_string())
+    }
+    fn get_value(&self) -> String {
+        self.as_ref()
+            .map(|inner| inner.get_value())
+            .unwrap_or_else(|| "".to_string())
+    }
+}
+
 impl<T: SISL> SISL for (&str, T) {
     fn get_name(&self) -> Option<String> {
         Some(self.0.to_string())
@@ -176,5 +193,10 @@ mod tests {
             "{\"i64 name\": !int \"-2147483649\"}",
             dumps(("i64 name", -2147483649 as i64))
         )
+    }
+
+    #[test]
+    fn none() {
+        assert_eq!("{\"_\": !_null \"\"}", dumps(None::<bool>))
     }
 }
